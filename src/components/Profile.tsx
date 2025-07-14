@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BookGrid } from './BookGrid';
@@ -16,6 +16,59 @@ interface ProfileProps {
 export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
   const { t } = useLanguage();
   const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
+  
+  useEffect(() => {
+    // Load stored user data
+    const storedUser = localStorage.getItem('telegramUser');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setTelegramUser(user);
+      } catch (error) {
+        console.error('Error parsing stored Telegram user:', error);
+      }
+    }
+
+    // Function to get Telegram user data
+    const getTelegramUserData = () => {
+      if (typeof window !== 'undefined' && (window as any).Telegram?.WebApp) {
+        const webapp = (window as any).Telegram.WebApp;
+        webapp.ready();
+        
+        // Check if user data is available
+        const initData = webapp.initData;
+        if (initData) {
+          try {
+            const urlParams = new URLSearchParams(initData);
+            const userString = urlParams.get('user');
+            if (userString) {
+              const telegramUserData = JSON.parse(decodeURIComponent(userString));
+              setTelegramUser(telegramUserData);
+              localStorage.setItem('telegramUser', JSON.stringify(telegramUserData));
+              console.log('Telegram user data loaded:', telegramUserData);
+            }
+          } catch (error) {
+            console.error('Error parsing Telegram user data:', error);
+          }
+        }
+      }
+    };
+
+    // Check if Telegram WebApp is already loaded
+    if (typeof window !== 'undefined' && (window as any).Telegram?.WebApp) {
+      getTelegramUserData();
+    } else {
+      // Load Telegram Web App script if not already loaded
+      const existingScript = document.querySelector('script[src="https://telegram.org/js/telegram-web-app.js"]');
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.src = 'https://telegram.org/js/telegram-web-app.js';
+        script.async = true;
+        script.onload = getTelegramUserData;
+        document.head.appendChild(script);
+      }
+    }
+  }, []);
   
   if (!user) {
     return (
@@ -36,6 +89,16 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
     : `${user.firstName} ${user.lastName}`;
   const displayPhoto = telegramUser?.photo_url || user.profilePhoto;
 
+  // Debug logs
+  console.log('Profile Debug Info:', {
+    telegramUser,
+    user,
+    displayName,
+    displayPhoto,
+    isTelegramWebApp: typeof window !== 'undefined' && !!(window as any).Telegram?.WebApp,
+    hasInitData: typeof window !== 'undefined' && !!(window as any).Telegram?.WebApp?.initData
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Profile Header */}
@@ -53,9 +116,21 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
               <CardTitle className="text-2xl text-foreground">
                 {displayName}
               </CardTitle>
-               <p className="text-muted-foreground">
-                 {purchasedBooks.length} {purchasedBooks.length === 1 ? t('profile.book_singular') : t('profile.book_plural')} purchased
-               </p>
+              <p className="text-muted-foreground">
+                {purchasedBooks.length} {purchasedBooks.length === 1 ? t('profile.book_singular') : t('profile.book_plural')} purchased
+              </p>
+              
+              {/* Show information about Telegram integration */}
+              {telegramUser ? (
+                <div className="flex items-center gap-2 text-sm text-primary">
+                  <span className="w-2 h-2 bg-primary rounded-full"></span>
+                  {t('common.connected_via_telegram')}
+                </div>
+              ) : (
+                <div className="text-sm text-muted-foreground">
+                  {t('common.open_in_telegram')}
+                </div>
+              )}
             </div>
           </div>
         </CardHeader>

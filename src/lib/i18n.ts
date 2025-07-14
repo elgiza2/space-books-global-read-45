@@ -100,6 +100,8 @@ export type TranslationKeys = {
   'common.payment_failed': string;
   'common.language': string;
   'common.wallet': string;
+  'common.connected_via_telegram': string;
+  'common.open_in_telegram': string;
 };
 
 // Complete translations for all supported languages
@@ -155,6 +157,8 @@ export const translations: Record<string, TranslationKeys> = {
     'common.payment_failed': 'فشل الدفع',
     'common.language': 'اللغة',
     'common.wallet': 'المحفظة',
+    'common.connected_via_telegram': 'متصل عبر تليجرام',
+    'common.open_in_telegram': 'افتح في تليجرام لعرض معلومات حسابك',
   },
   en: {
     'nav.home': 'Home',
@@ -207,6 +211,8 @@ export const translations: Record<string, TranslationKeys> = {
     'common.payment_failed': 'Payment Failed',
     'common.language': 'Language',
     'common.wallet': 'Wallet',
+    'common.connected_via_telegram': 'Connected via Telegram',
+    'common.open_in_telegram': 'Open in Telegram to view your account info',
   }
 };
 
