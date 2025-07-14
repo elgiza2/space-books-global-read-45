@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -6,17 +5,20 @@ import { BookGrid } from './BookGrid';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Book, User, TelegramUser } from '@/types/book';
 import { User as UserIcon, Book as BookIcon } from 'lucide-react';
-
 interface ProfileProps {
   user: User | null;
   purchasedBooks: Book[];
   onDownload: (bookId: string) => void;
 }
-
-export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
-  const { t } = useLanguage();
+export function Profile({
+  user,
+  purchasedBooks,
+  onDownload
+}: ProfileProps) {
+  const {
+    t
+  } = useLanguage();
   const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
-  
   useEffect(() => {
     // Load stored user data
     const storedUser = localStorage.getItem('telegramUser');
@@ -34,7 +36,7 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
       if (typeof window !== 'undefined' && (window as any).Telegram?.WebApp) {
         const webapp = (window as any).Telegram.WebApp;
         webapp.ready();
-        
+
         // Check if user data is available
         const initData = webapp.initData;
         if (initData) {
@@ -69,24 +71,18 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
       }
     }
   }, []);
-  
   if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 text-center">
             <UserIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <p className="text-muted-foreground">{t('profile.connect_wallet_message')}</p>
           </CardContent>
         </Card>
-      </div>
-    );
+      </div>;
   }
-
   const displayUser = telegramUser || user;
-  const displayName = telegramUser 
-    ? `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim()
-    : `${user.firstName} ${user.lastName}`;
+  const displayName = telegramUser ? `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim() : `${user.firstName} ${user.lastName}`;
   const displayPhoto = telegramUser?.photo_url || user.profilePhoto;
 
   // Debug logs
@@ -98,9 +94,7 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
     isTelegramWebApp: typeof window !== 'undefined' && !!(window as any).Telegram?.WebApp,
     hasInitData: typeof window !== 'undefined' && !!(window as any).Telegram?.WebApp?.initData
   });
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  return <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Profile Header */}
       <Card className="bg-transparent border-transparent shadow-none">
         <CardHeader className="bg-transparent">
@@ -121,16 +115,12 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
               </p>
               
               {/* Show information about Telegram integration */}
-              {telegramUser ? (
-                <div className="flex items-center gap-2 text-sm text-primary">
+              {telegramUser ? <div className="flex items-center gap-2 text-sm text-primary">
                   <span className="w-2 h-2 bg-primary rounded-full"></span>
                   {t('common.connected_via_telegram')}
-                </div>
-              ) : (
-                <div className="text-sm text-muted-foreground">
+                </div> : <div className="text-sm text-muted-foreground mx-0 px-0 rounded-none bg-black">
                   {t('common.open_in_telegram')}
-                </div>
-              )}
+                </div>}
             </div>
           </div>
         </CardHeader>
@@ -145,15 +135,8 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
            </h2>
         </div>
 
-        {purchasedBooks.length > 0 ? (
-          <BookGrid 
-            books={purchasedBooks} 
-            purchasedBookIds={purchasedBooks.map(book => book.id)} 
-            onPurchase={() => {}} // Not needed for profile view
-            onDownload={onDownload} 
-          />
-        ) : (
-          <Card className="bg-transparent border-transparent shadow-none">
+        {purchasedBooks.length > 0 ? <BookGrid books={purchasedBooks} purchasedBookIds={purchasedBooks.map(book => book.id)} onPurchase={() => {}} // Not needed for profile view
+      onDownload={onDownload} /> : <Card className="bg-transparent border-transparent shadow-none">
             <CardContent className="pt-6 text-center py-12 bg-transparent">
               <BookIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                <h3 className="text-lg font-semibold mb-2 text-foreground">
@@ -163,9 +146,7 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
                  {t('profile.no_books_message')}
                </p>
             </CardContent>
-          </Card>
-        )}
+          </Card>}
       </div>
-    </div>
-  );
+    </div>;
 }
