@@ -7,6 +7,7 @@ import { Book, User } from '@/types/book';
 import { Download, ShoppingCart, Eye, Star, Wallet } from 'lucide-react';
 import { BookComments } from './BookComments';
 import { TonConnect } from './TonConnect';
+import { useLanguage } from '@/hooks/useLanguage';
 interface BookDetailsProps {
   book: Book;
   isPurchased?: boolean;
@@ -23,6 +24,7 @@ export const BookDetails = ({
   user,
   isWalletConnected = false
 }: BookDetailsProps) => {
+  const { t } = useLanguage();
   const [showFullDetails, setShowFullDetails] = useState(false);
   return <>
       <Dialog open={showFullDetails} onOpenChange={setShowFullDetails}>
@@ -39,9 +41,9 @@ export const BookDetails = ({
               </div>
               
               {!isWalletConnected && !isPurchased && <div className="p-4 border rounded-lg bg-card/50">
-                  <p className="text-sm text-muted-foreground mb-3 text-center">
-                    Connect your TON wallet to purchase books
-                  </p>
+                   <p className="text-sm text-muted-foreground mb-3 text-center">
+                     {t('book.connect_wallet_to_purchase')}
+                   </p>
                   <TonConnect isConnected={isWalletConnected} onConnectionChange={() => {}} />
                 </div>}
             </div>
@@ -51,14 +53,14 @@ export const BookDetails = ({
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
                   <h1 className="text-2xl font-bold">{book.title}</h1>
-                  {book.featured && <Badge className="bg-gradient-gold">
-                      <Star className="w-3 h-3 mr-1" />
-                      Featured
-                    </Badge>}
+                   {book.featured && <Badge className="bg-gradient-gold">
+                       <Star className="w-3 h-3 mr-1" />
+                       {t('book.featured')}
+                     </Badge>}
                 </div>
                 
                 <div className="space-y-2">
-                  <p className="text-muted-foreground">Author: {book.author}</p>
+                  <p className="text-muted-foreground">{t('book.author')}: {book.author}</p>
                   <Badge variant="secondary">{book.category}</Badge>
                 </div>
                 
@@ -75,18 +77,18 @@ export const BookDetails = ({
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                {isPurchased ? <Button onClick={() => onDownload?.(book.id)} className="w-full bg-gradient-space hover:opacity-90" size="lg">
-                    <Download className="w-5 h-5 mr-2" />
-                    Download Book
-                  </Button> : !isWalletConnected ? <TonConnect isConnected={isWalletConnected} onConnectionChange={() => {}}>
-                    <Button className="w-full bg-gradient-cosmic hover:opacity-90" size="lg">
-                      <Wallet className="w-5 h-5 mr-2" />
-                      Connect Wallet to Purchase
-                    </Button>
-                  </TonConnect> : <Button onClick={() => onPurchase?.(book.id)} className="w-full bg-gradient-space hover:opacity-90" size="lg">
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Buy Now
-                  </Button>}
+                 {isPurchased ? <Button onClick={() => onDownload?.(book.id)} className="w-full bg-gradient-space hover:opacity-90" size="lg">
+                     <Download className="w-5 h-5 mr-2" />
+                     {t('book.download_book')}
+                   </Button> : !isWalletConnected ? <TonConnect isConnected={isWalletConnected} onConnectionChange={() => {}}>
+                     <Button className="w-full bg-gradient-cosmic hover:opacity-90" size="lg">
+                       <Wallet className="w-5 h-5 mr-2" />
+                       {t('book.connect_wallet_purchase')}
+                     </Button>
+                   </TonConnect> : <Button onClick={() => onPurchase?.(book.id)} className="w-full bg-gradient-space hover:opacity-90" size="lg">
+                     <ShoppingCart className="w-5 h-5 mr-2" />
+                     {t('book.buy_now')}
+                   </Button>}
               </div>
 
               {/* Comments Section */}

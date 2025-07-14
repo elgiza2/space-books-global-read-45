@@ -23,7 +23,7 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 text-center">
             <UserIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground">Please connect your wallet to view your profile</p>
+            <p className="text-muted-foreground">{t('profile.connect_wallet_message')}</p>
           </CardContent>
         </Card>
       </div>
@@ -53,9 +53,9 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
               <CardTitle className="text-2xl text-foreground">
                 {displayName}
               </CardTitle>
-              <p className="text-muted-foreground">
-                {purchasedBooks.length} {purchasedBooks.length === 1 ? 'book' : 'books'} purchased
-              </p>
+               <p className="text-muted-foreground">
+                 {purchasedBooks.length} {purchasedBooks.length === 1 ? t('profile.book_singular') : t('profile.book_plural')} purchased
+               </p>
             </div>
           </div>
         </CardHeader>
@@ -65,9 +65,9 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
       <div className="space-y-6">
         <div className="flex items-center gap-3">
           <BookIcon className="w-6 h-6 text-primary" />
-          <h2 className="text-2xl font-bold text-foreground">
-            Purchased Books
-          </h2>
+           <h2 className="text-2xl font-bold text-foreground">
+             {t('profile.purchased_books')}
+           </h2>
         </div>
 
         {purchasedBooks.length > 0 ? (
@@ -81,12 +81,12 @@ export function Profile({ user, purchasedBooks, onDownload }: ProfileProps) {
           <Card className="bg-transparent border-transparent shadow-none">
             <CardContent className="pt-6 text-center py-12 bg-transparent">
               <BookIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-semibold mb-2 text-foreground">
-                No Books Yet
-              </h3>
-              <p className="text-muted-foreground">
-                Browse our collection and start building your space library!
-              </p>
+               <h3 className="text-lg font-semibold mb-2 text-foreground">
+                 {t('profile.no_books_title')}
+               </h3>
+               <p className="text-muted-foreground">
+                 {t('profile.no_books_message')}
+               </p>
             </CardContent>
           </Card>
         )}

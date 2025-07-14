@@ -88,7 +88,7 @@ export function BookCard({
                  className="flex-1 text-xs h-8 px-2"
                >
                  <Download className="w-3 h-3 mr-1" />
-                 Download
+                 {t('book.download')}
               </Button>
             ) : !isWalletConnected ? (
               <TonConnect 
@@ -102,7 +102,7 @@ export function BookCard({
                    className="flex-1 text-xs h-8 px-2 min-w-0"
                  >
                    <Wallet className="w-3 h-3 mr-1 flex-shrink-0" />
-                   <span className="truncate">Connect Wallet</span>
+                   <span className="truncate">{t('common.connect_wallet')}</span>
                 </Button>
               </TonConnect>
             ) : (
@@ -114,7 +114,7 @@ export function BookCard({
                  className="flex-1 text-xs h-8 px-2"
                >
                  <ShoppingCart className="w-3 h-3 mr-1" />
-                 Buy Now
+                 {t('book.buy_now')}
               </Button>
             )}
           </div>

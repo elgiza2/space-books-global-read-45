@@ -44,10 +44,10 @@ export function MobileNavbar({
               <div className="flex flex-col space-y-6 mt-8">
                 {/* Language Selector */}
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Globe className="w-4 h-4 text-primary" />
-                    <span className="font-medium text-sm">Language</span>
-                  </div>
+                   <div className="flex items-center gap-2 mb-3">
+                     <Globe className="w-4 h-4 text-primary" />
+                     <span className="font-medium text-sm">{t('common.language')}</span>
+                   </div>
                   <Select value={currentLanguage} onValueChange={setLanguage}>
                     <SelectTrigger className="w-full h-9 text-sm">
                       <SelectValue />
@@ -62,10 +62,10 @@ export function MobileNavbar({
 
                 {/* Wallet Connection */}
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Wallet className="w-4 h-4 text-primary" />
-                    <span className="font-medium text-sm">Wallet</span>
-                  </div>
+                   <div className="flex items-center gap-2 mb-3">
+                     <Wallet className="w-4 h-4 text-primary" />
+                     <span className="font-medium text-sm">{t('common.wallet')}</span>
+                   </div>
                   <Button onClick={() => {
                   onConnectWallet();
                   setIsMenuOpen(false);
@@ -78,11 +78,11 @@ export function MobileNavbar({
                 </div>
 
                 {/* Admin Access Hint */}
-                {profileClickCount > 0 && <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
-                    <p className="text-xs text-primary">
-                      Admin access: {profileClickCount}/5 clicks
-                    </p>
-                  </div>}
+                 {profileClickCount > 0 && <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
+                     <p className="text-xs text-primary">
+                       {t('admin.access_hint').replace('{count}', profileClickCount.toString())}
+                     </p>
+                   </div>}
               </div>
             </SheetContent>
           </Sheet>
