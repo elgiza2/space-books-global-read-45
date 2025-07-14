@@ -14,12 +14,16 @@ import { Book, User } from '@/types/book';
 import { TonConnect, useTonPurchase } from '@/components/TonConnect';
 import { useTonWallet } from '@tonconnect/ui-react';
 import { usePurchases } from '@/hooks/usePurchases';
-
 const AppContent = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const wallet = useTonWallet();
-  const { purchaseBook, isConnected: isTonConnected, walletAddress: tonWalletAddress } = useTonPurchase();
-  
+  const {
+    purchaseBook,
+    isConnected: isTonConnected,
+    walletAddress: tonWalletAddress
+  } = useTonPurchase();
   const [currentSection, setCurrentSection] = useState('home');
   const [books, setBooks] = useState<Book[]>([]);
   const [user, setUser] = useState<User | null>(null);
@@ -29,9 +33,13 @@ const AppContent = () => {
 
   // Use a proper UUID for the mock user
   const mockUserId = '550e8400-e29b-41d4-a716-446655440000';
-  
+
   // Use the new purchases hook
-  const { purchasedBookIds, addPurchase, refreshPurchases } = usePurchases(mockUserId);
+  const {
+    purchasedBookIds,
+    addPurchase,
+    refreshPurchases
+  } = usePurchases(mockUserId);
 
   // Convert database book to app book format with validation
   const convertDbBookToBook = (dbBook: DatabaseBook): Book => {
@@ -79,13 +87,12 @@ const AppContent = () => {
     loadBooks();
     initializeUser();
   }, []);
-
   const loadBooks = async () => {
     try {
       console.log('Loading books from database...');
       const dbBooks = await dbFunctions.getBooks();
       console.log('Loaded books:', dbBooks);
-      
+
       // Validate and convert books
       const validBooks = dbBooks.filter(book => {
         if (!book.id || !book.title || !book.author || !book.category) {
@@ -94,7 +101,6 @@ const AppContent = () => {
         }
         return true;
       });
-      
       setBooks(validBooks.map(convertDbBookToBook));
     } catch (error) {
       console.error('Failed to load books:', error);
@@ -105,7 +111,6 @@ const AppContent = () => {
       });
     }
   };
-
   const initializeUser = async () => {
     // Create a mock user with proper UUID
     const mockUser: User = {
@@ -120,12 +125,10 @@ const AppContent = () => {
     };
     setUser(mockUser);
   };
-
   const handleProfileClick = () => {
     const newCount = profileClickCount + 1;
     console.log(`Profile clicked ${newCount} times`);
     setProfileClickCount(newCount);
-    
     if (newCount === 5) {
       setShowAdminInput(true);
       setProfileClickCount(0);
@@ -148,10 +151,12 @@ const AppContent = () => {
   // Update user wallet address when TON wallet connects
   useEffect(() => {
     if (isTonConnected && tonWalletAddress && user && user.walletAddress !== tonWalletAddress) {
-      setUser(prev => prev ? { ...prev, walletAddress: tonWalletAddress } : null);
+      setUser(prev => prev ? {
+        ...prev,
+        walletAddress: tonWalletAddress
+      } : null);
     }
   }, [isTonConnected, tonWalletAddress, user]);
-
   const handlePurchase = async (bookId: string) => {
     if (!isTonConnected || !user) {
       toast({
@@ -161,44 +166,30 @@ const AppContent = () => {
       });
       return;
     }
-
     const book = books.find(b => b.id === bookId);
     if (!book) return;
-
     try {
       toast({
         title: "Processing Payment",
         description: "Please approve the transaction in your wallet"
       });
-
       console.log('Starting TON purchase for book:', book.title, 'Price:', book.price);
-
       const result = await purchaseBook(book.price, bookId, book.title, book.author);
-      
       console.log('TON purchase result:', result);
-
       if (result) {
         // Handle different types of transaction results
         let transactionHash: string;
-        
         if (typeof result === 'string') {
           transactionHash = result;
         } else if (result && typeof result === 'object') {
           // Check for common transaction hash properties
-          transactionHash = (result as any).boc || 
-                           (result as any).hash || 
-                           (result as any).txHash || 
-                           (result as any).transactionHash ||
-                           JSON.stringify(result);
+          transactionHash = (result as any).boc || (result as any).hash || (result as any).txHash || (result as any).transactionHash || JSON.stringify(result);
         } else {
           // Fallback to a mock hash for development
           transactionHash = `ton_tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         }
-
         console.log('Using transaction hash:', transactionHash);
-
         const success = await addPurchase(bookId, transactionHash);
-        
         if (success) {
           toast({
             title: "Purchase Successful!",
@@ -223,12 +214,10 @@ const AppContent = () => {
       });
     }
   };
-
   const handleDownload = async (bookId: string) => {
     try {
       const book = books.find(b => b.id === bookId);
       if (!book) return;
-
       toast({
         title: "Starting Download",
         description: `Downloading ${book.title}...`
@@ -244,11 +233,10 @@ const AppContent = () => {
       });
     }
   };
-
   const handleAddBook = async (bookData: Omit<Book, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
       console.log('Adding book:', bookData);
-      
+
       // Validate required fields
       if (!bookData.title?.trim() || !bookData.author?.trim() || !bookData.category?.trim()) {
         toast({
@@ -258,7 +246,6 @@ const AppContent = () => {
         });
         return;
       }
-
       const dbBook = await dbFunctions.addBook({
         title: bookData.title.trim(),
         description: bookData.description?.trim() || '',
@@ -269,11 +256,9 @@ const AppContent = () => {
         category: bookData.category.trim(),
         featured: Boolean(bookData.featured)
       });
-      
       console.log('Book added successfully:', dbBook);
       const newBook = convertDbBookToBook(dbBook);
       setBooks(prev => [newBook, ...prev]);
-      
       toast({
         title: "Book Added",
         description: "New book added successfully"
@@ -287,15 +272,12 @@ const AppContent = () => {
       });
     }
   };
-
   const handleEditBook = async (id: string, updates: Partial<Book>) => {
     try {
       console.log('Updating book:', id, updates);
-      
       if (!id) {
         throw new Error('Book ID is required');
       }
-
       const dbUpdates: any = {};
       if (updates.title !== undefined) dbUpdates.title = String(updates.title).trim();
       if (updates.description !== undefined) dbUpdates.description = String(updates.description).trim();
@@ -305,14 +287,11 @@ const AppContent = () => {
       if (updates.author !== undefined) dbUpdates.author = String(updates.author).trim();
       if (updates.category !== undefined) dbUpdates.category = String(updates.category).trim();
       if (updates.featured !== undefined) dbUpdates.featured = Boolean(updates.featured);
-
       const updatedDbBook = await dbFunctions.updateBook(id, dbUpdates);
-      
       if (updatedDbBook) {
         console.log('Book updated successfully:', updatedDbBook);
         const updatedBook = convertDbBookToBook(updatedDbBook);
         setBooks(prev => prev.map(book => book.id === id ? updatedBook : book));
-        
         toast({
           title: "Book Updated",
           description: "Book updated successfully"
@@ -327,21 +306,16 @@ const AppContent = () => {
       });
     }
   };
-
   const handleDeleteBook = async (id: string) => {
     try {
       console.log('Deleting book:', id);
-      
       if (!id) {
         throw new Error('Book ID is required');
       }
-
       const success = await dbFunctions.deleteBook(id);
-      
       if (success) {
         console.log('Book deleted successfully');
         setBooks(prev => prev.filter(book => book.id !== id));
-        
         toast({
           title: "Book Deleted",
           description: "Book deleted successfully"
@@ -356,18 +330,18 @@ const AppContent = () => {
       });
     }
   };
-
   const handleAdminCodeSubmit = async () => {
     console.log('Admin code submitted:', adminCode);
     const correctCode = 'SPACE2024';
-    
     if (adminCode.trim() === correctCode && user) {
       console.log('Admin code is correct, granting access');
-      setUser(prev => prev ? { ...prev, isAdmin: true } : null);
+      setUser(prev => prev ? {
+        ...prev,
+        isAdmin: true
+      } : null);
       setCurrentSection('admin');
       setShowAdminInput(false);
       setAdminCode('');
-      
       toast({
         title: "Admin Access Granted",
         description: "Welcome to admin panel"
@@ -382,56 +356,23 @@ const AppContent = () => {
       setAdminCode('');
     }
   };
-
   const featuredBooks = books.filter(book => book.featured);
   const purchasedBooks = books.filter(book => purchasedBookIds.includes(book.id));
-
   const renderContent = () => {
     switch (currentSection) {
       case 'profile':
-        return (
-          <Profile 
-            user={user} 
-            purchasedBooks={purchasedBooks} 
-            onDownload={handleDownload} 
-          />
-        );
+        return <Profile user={user} purchasedBooks={purchasedBooks} onDownload={handleDownload} />;
       case 'admin':
-        return user?.isAdmin ? (
-          <AdminPanel 
-            books={books} 
-            onAddBook={handleAddBook} 
-            onEditBook={handleEditBook} 
-            onDeleteBook={handleDeleteBook} 
-          />
-        ) : null;
+        return user?.isAdmin ? <AdminPanel books={books} onAddBook={handleAddBook} onEditBook={handleEditBook} onDeleteBook={handleDeleteBook} /> : null;
       default:
-        return (
-          <div className="space-y-6">
-            <Home 
-              featuredBooks={featuredBooks} 
-              allBooks={books} 
-              purchasedBookIds={purchasedBookIds} 
-              onPurchase={handlePurchase} 
-              onDownload={handleDownload} 
-              user={user} 
-              isWalletConnected={isTonConnected} 
-            />
-          </div>
-        );
+        return <div className="space-y-6">
+            <Home featuredBooks={featuredBooks} allBooks={books} purchasedBookIds={purchasedBookIds} onPurchase={handlePurchase} onDownload={handleDownload} user={user} isWalletConnected={isTonConnected} />
+          </div>;
     }
   };
-
-  return (
-    <LanguageProvider>
+  return <LanguageProvider>
       <div className="min-h-screen bg-background">
-        <MobileNavbar 
-          currentSection={currentSection} 
-          isWalletConnected={isTonConnected} 
-          onConnectWallet={() => {}} 
-          onProfileClick={() => {}} 
-          profileClickCount={profileClickCount} 
-        />
+        <MobileNavbar currentSection={currentSection} isWalletConnected={isTonConnected} onConnectWallet={() => {}} onProfileClick={() => {}} profileClickCount={profileClickCount} />
         
         <main className="pb-20 bg-black">
           {renderContent()}
@@ -440,42 +381,21 @@ const AppContent = () => {
         {/* Bottom Navigation for mobile */}
         <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border z-50">
           <div className="flex items-center justify-around h-16 px-4">
-            <Button 
-              variant={currentSection === 'home' ? 'space' : 'ghost'} 
-              size="sm" 
-              onClick={() => setCurrentSection('home')} 
-              className="flex-1 mx-1"
-            >
+            <Button variant={currentSection === 'home' ? 'space' : 'ghost'} size="sm" onClick={() => setCurrentSection('home')} className="flex-1 mx-1">
               Home
             </Button>
             
-            <Button 
-              variant={currentSection === 'profile' ? 'space' : 'ghost'} 
-              size="sm" 
-              onClick={() => {
-                setCurrentSection('profile');
-                handleProfileClick();
-              }} 
-              className="flex-1 mx-1 relative"
-            >
+            <Button variant={currentSection === 'profile' ? 'space' : 'ghost'} size="sm" onClick={() => {
+            setCurrentSection('profile');
+            handleProfileClick();
+          }} className="flex-1 mx-1 relative">
               Profile
-              {profileClickCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {profileClickCount}
-                </span>
-              )}
+              {profileClickCount > 0}
             </Button>
             
-            {user?.isAdmin && (
-              <Button 
-                variant={currentSection === 'admin' ? 'space' : 'ghost'} 
-                size="sm" 
-                onClick={() => setCurrentSection('admin')} 
-                className="flex-1 mx-1"
-              >
+            {user?.isAdmin && <Button variant={currentSection === 'admin' ? 'space' : 'ghost'} size="sm" onClick={() => setCurrentSection('admin')} className="flex-1 mx-1">
                 Admin
-              </Button>
-            )}
+              </Button>}
           </div>
         </div>
 
@@ -491,29 +411,18 @@ const AppContent = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="admin-code">Enter Admin Code</Label>
-                <Input 
-                  id="admin-code" 
-                  type="password" 
-                  value={adminCode} 
-                  onChange={e => setAdminCode(e.target.value)} 
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      handleAdminCodeSubmit();
-                    }
-                  }} 
-                  placeholder="Admin code..." 
-                  autoFocus 
-                />
+                <Input id="admin-code" type="password" value={adminCode} onChange={e => setAdminCode(e.target.value)} onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  handleAdminCodeSubmit();
+                }
+              }} placeholder="Admin code..." autoFocus />
               </div>
               <div className="flex justify-end space-x-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setShowAdminInput(false);
-                    setAdminCode('');
-                    setProfileClickCount(0);
-                  }}
-                >
+                <Button variant="outline" onClick={() => {
+                setShowAdminInput(false);
+                setAdminCode('');
+                setProfileClickCount(0);
+              }}>
                   Cancel
                 </Button>
                 <Button onClick={handleAdminCodeSubmit} className="bg-gradient-space">
@@ -524,8 +433,6 @@ const AppContent = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </LanguageProvider>
-  );
+    </LanguageProvider>;
 };
-
 export default AppContent;
