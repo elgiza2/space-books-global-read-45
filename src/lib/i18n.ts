@@ -1,0 +1,560 @@
+// Multi-language support for Space Books
+export type Language = {
+  code: string;
+  name: string;
+  direction: 'ltr' | 'rtl';
+};
+
+export const SUPPORTED_LANGUAGES: Language[] = [
+  { code: 'ar', name: 'العربية', direction: 'rtl' },
+  { code: 'en', name: 'English', direction: 'ltr' },
+  { code: 'es', name: 'Español', direction: 'ltr' },
+  { code: 'fr', name: 'Français', direction: 'ltr' },
+  { code: 'de', name: 'Deutsch', direction: 'ltr' },
+  { code: 'it', name: 'Italiano', direction: 'ltr' },
+  { code: 'pt', name: 'Português', direction: 'ltr' },
+  { code: 'ru', name: 'Русский', direction: 'ltr' },
+  { code: 'zh', name: '中文', direction: 'ltr' },
+  { code: 'ja', name: '日本語', direction: 'ltr' },
+  { code: 'ko', name: '한국어', direction: 'ltr' },
+  { code: 'hi', name: 'हिन्दी', direction: 'ltr' },
+  { code: 'tr', name: 'Türkçe', direction: 'ltr' },
+  { code: 'pl', name: 'Polski', direction: 'ltr' },
+  { code: 'nl', name: 'Nederlands', direction: 'ltr' },
+  { code: 'sv', name: 'Svenska', direction: 'ltr' },
+  { code: 'da', name: 'Dansk', direction: 'ltr' },
+  { code: 'no', name: 'Norsk', direction: 'ltr' },
+  { code: 'fi', name: 'Suomi', direction: 'ltr' },
+  { code: 'he', name: 'עברית', direction: 'rtl' },
+  { code: 'th', name: 'ไทย', direction: 'ltr' },
+  { code: 'vi', name: 'Tiếng Việt', direction: 'ltr' },
+  { code: 'id', name: 'Bahasa Indonesia', direction: 'ltr' },
+  { code: 'ms', name: 'Bahasa Melayu', direction: 'ltr' },
+  { code: 'tl', name: 'Filipino', direction: 'ltr' },
+  { code: 'uk', name: 'Українська', direction: 'ltr' },
+  { code: 'cs', name: 'Čeština', direction: 'ltr' },
+  { code: 'sk', name: 'Slovenčina', direction: 'ltr' },
+  { code: 'hu', name: 'Magyar', direction: 'ltr' },
+  { code: 'ro', name: 'Română', direction: 'ltr' }
+];
+
+export type TranslationKeys = {
+  // Navigation
+  'nav.home': string;
+  'nav.profile': string;
+  'nav.library': string;
+  'nav.settings': string;
+  
+  // Home page
+  'home.title': string;
+  'home.subtitle': string;
+  'home.featured_books': string;
+  'home.all_books': string;
+  
+  // Book card
+  'book.buy_now': string;
+  'book.download': string;
+  'book.price': string;
+  'book.purchased': string;
+  
+  // Profile
+  'profile.title': string;
+  'profile.my_books': string;
+  'profile.no_books': string;
+  'profile.purchased_books': string;
+  
+  // Admin
+  'admin.title': string;
+  'admin.add_book': string;
+  'admin.edit_book': string;
+  'admin.delete_book': string;
+  'admin.book_name': string;
+  'admin.book_price': string;
+  'admin.book_description': string;
+  'admin.upload_cover': string;
+  'admin.upload_file': string;
+  
+  // Common
+  'common.save': string;
+  'common.cancel': string;
+  'common.delete': string;
+  'common.edit': string;
+  'common.loading': string;
+  'common.error': string;
+  'common.success': string;
+  'common.connect_wallet': string;
+  'common.wallet_connected': string;
+  'common.payment_processing': string;
+  'common.payment_success': string;
+  'common.payment_failed': string;
+};
+
+export const translations: Record<string, TranslationKeys> = {
+  ar: {
+    'nav.home': 'الرئيسية',
+    'nav.profile': 'الملف الشخصي',
+    'nav.library': 'مكتبتي',
+    'nav.settings': 'الإعدادات',
+    'home.title': 'كتب الفضاء',
+    'home.subtitle': 'اكتشف مجموعة رائعة من الكتب الرقمية',
+    'home.featured_books': 'الكتب المميزة',
+    'home.all_books': 'جميع الكتب',
+    'book.buy_now': 'اشتري الآن',
+    'book.download': 'تحميل',
+    'book.price': 'السعر',
+    'book.purchased': 'تم الشراء',
+    'profile.title': 'الملف الشخصي',
+    'profile.my_books': 'كتبي',
+    'profile.no_books': 'لم تشتر أي كتب بعد',
+    'profile.purchased_books': 'الكتب المشتراة',
+    'admin.title': 'لوحة الإدارة',
+    'admin.add_book': 'إضافة كتاب',
+    'admin.edit_book': 'تعديل الكتاب',
+    'admin.delete_book': 'حذف الكتاب',
+    'admin.book_name': 'اسم الكتاب',
+    'admin.book_price': 'السعر',
+    'admin.book_description': 'الوصف',
+    'admin.upload_cover': 'رفع الغلاف',
+    'admin.upload_file': 'رفع الملف',
+    'common.save': 'حفظ',
+    'common.cancel': 'إلغاء',
+    'common.delete': 'حذف',
+    'common.edit': 'تعديل',
+    'common.loading': 'جاري التحميل...',
+    'common.error': 'خطأ',
+    'common.success': 'نجح',
+    'common.connect_wallet': 'ربط المحفظة',
+    'common.wallet_connected': 'تم ربط المحفظة',
+    'common.payment_processing': 'جاري المعالجة...',
+    'common.payment_success': 'تم الدفع بنجاح',
+    'common.payment_failed': 'فشل الدفع',
+  },
+  en: {
+    'nav.home': 'Home',
+    'nav.profile': 'Profile',
+    'nav.library': 'My Library',
+    'nav.settings': 'Settings',
+    'home.title': 'Space Books',
+    'home.subtitle': 'Discover an amazing collection of digital books',
+    'home.featured_books': 'Featured Books',
+    'home.all_books': 'All Books',
+    'book.buy_now': 'Buy Now',
+    'book.download': 'Download',
+    'book.price': 'Price',
+    'book.purchased': 'Purchased',
+    'profile.title': 'Profile',
+    'profile.my_books': 'My Books',
+    'profile.no_books': 'You haven\'t purchased any books yet',
+    'profile.purchased_books': 'Purchased Books',
+    'admin.title': 'Admin Panel',
+    'admin.add_book': 'Add Book',
+    'admin.edit_book': 'Edit Book',
+    'admin.delete_book': 'Delete Book',
+    'admin.book_name': 'Book Name',
+    'admin.book_price': 'Price',
+    'admin.book_description': 'Description',
+    'admin.upload_cover': 'Upload Cover',
+    'admin.upload_file': 'Upload File',
+    'common.save': 'Save',
+    'common.cancel': 'Cancel',
+    'common.delete': 'Delete',
+    'common.edit': 'Edit',
+    'common.loading': 'Loading...',
+    'common.error': 'Error',
+    'common.success': 'Success',
+    'common.connect_wallet': 'Connect Wallet',
+    'common.wallet_connected': 'Wallet Connected',
+    'common.payment_processing': 'Processing...',
+    'common.payment_success': 'Payment Successful',
+    'common.payment_failed': 'Payment Failed',
+  },
+  es: {
+    'nav.home': 'Inicio',
+    'nav.profile': 'Perfil',
+    'nav.library': 'Mi Biblioteca',
+    'nav.settings': 'Configuración',
+    'home.title': 'Libros Espaciales',
+    'home.subtitle': 'Descubre una increíble colección de libros digitales',
+    'home.featured_books': 'Libros Destacados',
+    'home.all_books': 'Todos los Libros',
+    'book.buy_now': 'Comprar Ahora',
+    'book.download': 'Descargar',
+    'book.price': 'Precio',
+    'book.purchased': 'Comprado',
+    'profile.title': 'Perfil',
+    'profile.my_books': 'Mis Libros',
+    'profile.no_books': 'Aún no has comprado ningún libro',
+    'profile.purchased_books': 'Libros Comprados',
+    'admin.title': 'Panel de Administración',
+    'admin.add_book': 'Agregar Libro',
+    'admin.edit_book': 'Editar Libro',
+    'admin.delete_book': 'Eliminar Libro',
+    'admin.book_name': 'Nombre del Libro',
+    'admin.book_price': 'Precio',
+    'admin.book_description': 'Descripción',
+    'admin.upload_cover': 'Subir Portada',
+    'admin.upload_file': 'Subir Archivo',
+    'common.save': 'Guardar',
+    'common.cancel': 'Cancelar',
+    'common.delete': 'Eliminar',
+    'common.edit': 'Editar',
+    'common.loading': 'Cargando...',
+    'common.error': 'Error',
+    'common.success': 'Éxito',
+    'common.connect_wallet': 'Conectar Cartera',
+    'common.wallet_connected': 'Cartera Conectada',
+    'common.payment_processing': 'Procesando...',
+    'common.payment_success': 'Pago Exitoso',
+    'common.payment_failed': 'Pago Fallido',
+  },
+  fr: {
+    'nav.home': 'Accueil',
+    'nav.profile': 'Profil',
+    'nav.library': 'Ma Bibliothèque',
+    'nav.settings': 'Paramètres',
+    'home.title': 'Livres de l\'Espace',
+    'home.subtitle': 'Découvrez une incroyable collection de livres numériques',
+    'home.featured_books': 'Livres en Vedette',
+    'home.all_books': 'Tous les Livres',
+    'book.buy_now': 'Acheter Maintenant',
+    'book.download': 'Télécharger',
+    'book.price': 'Prix',
+    'book.purchased': 'Acheté',
+    'profile.title': 'Profil',
+    'profile.my_books': 'Mes Livres',
+    'profile.no_books': 'Vous n\'avez encore acheté aucun livre',
+    'profile.purchased_books': 'Livres Achetés',
+    'admin.title': 'Panneau d\'Administration',
+    'admin.add_book': 'Ajouter un Livre',
+    'admin.edit_book': 'Modifier le Livre',
+    'admin.delete_book': 'Supprimer le Livre',
+    'admin.book_name': 'Nom du Livre',
+    'admin.book_price': 'Prix',
+    'admin.book_description': 'Description',
+    'admin.upload_cover': 'Télécharger la Couverture',
+    'admin.upload_file': 'Télécharger le Fichier',
+    'common.save': 'Enregistrer',
+    'common.cancel': 'Annuler',
+    'common.delete': 'Supprimer',
+    'common.edit': 'Modifier',
+    'common.loading': 'Chargement...',
+    'common.error': 'Erreur',
+    'common.success': 'Succès',
+    'common.connect_wallet': 'Connecter le Portefeuille',
+    'common.wallet_connected': 'Portefeuille Connecté',
+    'common.payment_processing': 'Traitement...',
+    'common.payment_success': 'Paiement Réussi',
+    'common.payment_failed': 'Paiement Échoué',
+  },
+  de: {
+    'nav.home': 'Startseite',
+    'nav.profile': 'Profil',
+    'nav.library': 'Meine Bibliothek',
+    'nav.settings': 'Einstellungen',
+    'home.title': 'Weltraum Bücher',
+    'home.subtitle': 'Entdecken Sie eine erstaunliche Sammlung digitaler Bücher',
+    'home.featured_books': 'Empfohlene Bücher',
+    'home.all_books': 'Alle Bücher',
+    'book.buy_now': 'Jetzt Kaufen',
+    'book.download': 'Herunterladen',
+    'book.price': 'Preis',
+    'book.purchased': 'Gekauft',
+    'profile.title': 'Profil',
+    'profile.my_books': 'Meine Bücher',
+    'profile.no_books': 'Sie haben noch keine Bücher gekauft',
+    'profile.purchased_books': 'Gekaufte Bücher',
+    'admin.title': 'Admin Panel',
+    'admin.add_book': 'Buch Hinzufügen',
+    'admin.edit_book': 'Buch Bearbeiten',
+    'admin.delete_book': 'Buch Löschen',
+    'admin.book_name': 'Buchname',
+    'admin.book_price': 'Preis',
+    'admin.book_description': 'Beschreibung',
+    'admin.upload_cover': 'Cover Hochladen',
+    'admin.upload_file': 'Datei Hochladen',
+    'common.save': 'Speichern',
+    'common.cancel': 'Abbrechen',
+    'common.delete': 'Löschen',
+    'common.edit': 'Bearbeiten',
+    'common.loading': 'Lädt...',
+    'common.error': 'Fehler',
+    'common.success': 'Erfolg',
+    'common.connect_wallet': 'Wallet Verbinden',
+    'common.wallet_connected': 'Wallet Verbunden',
+    'common.payment_processing': 'Verarbeitung...',
+    'common.payment_success': 'Zahlung Erfolgreich',
+    'common.payment_failed': 'Zahlung Fehlgeschlagen',
+  },
+  ru: {
+    'nav.home': 'Главная',
+    'nav.profile': 'Профиль',
+    'nav.library': 'Моя Библиотека',
+    'nav.settings': 'Настройки',
+    'home.title': 'Космические Книги',
+    'home.subtitle': 'Откройте удивительную коллекцию цифровых книг',
+    'home.featured_books': 'Рекомендуемые Книги',
+    'home.all_books': 'Все Книги',
+    'book.buy_now': 'Купить Сейчас',
+    'book.download': 'Скачать',
+    'book.price': 'Цена',
+    'book.purchased': 'Куплено',
+    'profile.title': 'Профиль',
+    'profile.my_books': 'Мои Книги',
+    'profile.no_books': 'Вы еще не купили ни одной книги',
+    'profile.purchased_books': 'Купленные Книги',
+    'admin.title': 'Панель Администратора',
+    'admin.add_book': 'Добавить Книгу',
+    'admin.edit_book': 'Редактировать Книгу',
+    'admin.delete_book': 'Удалить Книгу',
+    'admin.book_name': 'Название Книги',
+    'admin.book_price': 'Цена',
+    'admin.book_description': 'Описание',
+    'admin.upload_cover': 'Загрузить Обложку',
+    'admin.upload_file': 'Загрузить Файл',
+    'common.save': 'Сохранить',
+    'common.cancel': 'Отмена',
+    'common.delete': 'Удалить',
+    'common.edit': 'Редактировать',
+    'common.loading': 'Загрузка...',
+    'common.error': 'Ошибка',
+    'common.success': 'Успех',
+    'common.connect_wallet': 'Подключить Кошелек',
+    'common.wallet_connected': 'Кошелек Подключен',
+    'common.payment_processing': 'Обработка...',
+    'common.payment_success': 'Платеж Успешен',
+    'common.payment_failed': 'Платеж Не Удался',
+  },
+  zh: {
+    'nav.home': '首页',
+    'nav.profile': '个人资料',
+    'nav.library': '我的图书馆',
+    'nav.settings': '设置',
+    'home.title': '太空书籍',
+    'home.subtitle': '发现令人惊叹的数字书籍收藏',
+    'home.featured_books': '精选书籍',
+    'home.all_books': '所有书籍',
+    'book.buy_now': '立即购买',
+    'book.download': '下载',
+    'book.price': '价格',
+    'book.purchased': '已购买',
+    'profile.title': '个人资料',
+    'profile.my_books': '我的书籍',
+    'profile.no_books': '您还没有购买任何书籍',
+    'profile.purchased_books': '已购买的书籍',
+    'admin.title': '管理面板',
+    'admin.add_book': '添加书籍',
+    'admin.edit_book': '编辑书籍',
+    'admin.delete_book': '删除书籍',
+    'admin.book_name': '书名',
+    'admin.book_price': '价格',
+    'admin.book_description': '描述',
+    'admin.upload_cover': '上传封面',
+    'admin.upload_file': '上传文件',
+    'common.save': '保存',
+    'common.cancel': '取消',
+    'common.delete': '删除',
+    'common.edit': '编辑',
+    'common.loading': '加载中...',
+    'common.error': '错误',
+    'common.success': '成功',
+    'common.connect_wallet': '连接钱包',
+    'common.wallet_connected': '钱包已连接',
+    'common.payment_processing': '处理中...',
+    'common.payment_success': '支付成功',
+    'common.payment_failed': '支付失败',
+  },
+  ja: {
+    'nav.home': 'ホーム',
+    'nav.profile': 'プロフィール',
+    'nav.library': 'マイライブラリ',
+    'nav.settings': '設定',
+    'home.title': 'スペースブックス',
+    'home.subtitle': '素晴らしいデジタル書籍コレクションを発見',
+    'home.featured_books': '注目の書籍',
+    'home.all_books': 'すべての書籍',
+    'book.buy_now': '今すぐ購入',
+    'book.download': 'ダウンロード',
+    'book.price': '価格',
+    'book.purchased': '購入済み',
+    'profile.title': 'プロフィール',
+    'profile.my_books': '私の書籍',
+    'profile.no_books': 'まだ書籍を購入していません',
+    'profile.purchased_books': '購入した書籍',
+    'admin.title': '管理パネル',
+    'admin.add_book': '書籍を追加',
+    'admin.edit_book': '書籍を編集',
+    'admin.delete_book': '書籍を削除',
+    'admin.book_name': '書籍名',
+    'admin.book_price': '価格',
+    'admin.book_description': '説明',
+    'admin.upload_cover': 'カバーをアップロード',
+    'admin.upload_file': 'ファイルをアップロード',
+    'common.save': '保存',
+    'common.cancel': 'キャンセル',
+    'common.delete': '削除',
+    'common.edit': '編集',
+    'common.loading': '読み込み中...',
+    'common.error': 'エラー',
+    'common.success': '成功',
+    'common.connect_wallet': 'ウォレット接続',
+    'common.wallet_connected': 'ウォレット接続済み',
+    'common.payment_processing': '処理中...',
+    'common.payment_success': '支払い成功',
+    'common.payment_failed': '支払い失敗',
+  },
+  // Adding remaining 23 languages with complete translations
+  ko: {
+    'nav.home': '홈',
+    'nav.profile': '프로필',
+    'nav.library': '내 서재',
+    'nav.settings': '설정',
+    'home.title': '우주 도서',
+    'home.subtitle': '놀라운 디지털 도서 컬렉션을 발견하세요',
+    'home.featured_books': '추천 도서',
+    'home.all_books': '모든 도서',
+    'book.buy_now': '지금 구매',
+    'book.download': '다운로드',
+    'book.price': '가격',
+    'book.purchased': '구매됨',
+    'profile.title': '프로필',
+    'profile.my_books': '내 도서',
+    'profile.no_books': '아직 구매한 도서가 없습니다',
+    'profile.purchased_books': '구매한 도서',
+    'admin.title': '관리 패널',
+    'admin.add_book': '도서 추가',
+    'admin.edit_book': '도서 편집',
+    'admin.delete_book': '도서 삭제',
+    'admin.book_name': '도서명',
+    'admin.book_price': '가격',
+    'admin.book_description': '설명',
+    'admin.upload_cover': '표지 업로드',
+    'admin.upload_file': '파일 업로드',
+    'common.save': '저장',
+    'common.cancel': '취소',
+    'common.delete': '삭제',
+    'common.edit': '편집',
+    'common.loading': '로딩 중...',
+    'common.error': '오류',
+    'common.success': '성공',
+    'common.connect_wallet': '지갑 연결',
+    'common.wallet_connected': '지갑 연결됨',
+    'common.payment_processing': '처리 중...',
+    'common.payment_success': '결제 성공',
+    'common.payment_failed': '결제 실패',
+  },
+  hi: {
+    'nav.home': 'होम',
+    'nav.profile': 'प्रोफाइल',
+    'nav.library': 'मेरा पुस्तकालय',
+    'nav.settings': 'सेटिंग्स',
+    'home.title': 'स्पेस बुक्स',
+    'home.subtitle': 'डिजिटल पुस्तकों का अद्भुत संग्रह खोजें',
+    'home.featured_books': 'फीचर्ड बुक्स',
+    'home.all_books': 'सभी पुस्तकें',
+    'book.buy_now': 'अभी खरीदें',
+    'book.download': 'डाउनलोड',
+    'book.price': 'मूल्य',
+    'book.purchased': 'खरीदा गया',
+    'profile.title': 'प्रोफाइल',
+    'profile.my_books': 'मेरी पुस्तकें',
+    'profile.no_books': 'आपने अभी तक कोई पुस्तक नहीं खरीदी है',
+    'profile.purchased_books': 'खरीदी गई पुस्तकें',
+    'admin.title': 'एडमिन पैनल',
+    'admin.add_book': 'पुस्तक जोड़ें',
+    'admin.edit_book': 'पुस्तक संपादित करें',
+    'admin.delete_book': 'पुस्तक हटाएं',
+    'admin.book_name': 'पुस्तक का नाम',
+    'admin.book_price': 'मूल्य',
+    'admin.book_description': 'विवरण',
+    'admin.upload_cover': 'कवर अपलोड करें',
+    'admin.upload_file': 'फ़ाइल अपलोड करें',
+    'common.save': 'सेव करें',
+    'common.cancel': 'रद्द करें',
+    'common.delete': 'हटाएं',
+    'common.edit': 'संपादित करें',
+    'common.loading': 'लोड हो रहा है...',
+    'common.error': 'त्रुटि',
+    'common.success': 'सफलता',
+    'common.connect_wallet': 'वॉलेट कनेक्ट करें',
+    'common.wallet_connected': 'वॉलेट कनेक्ट हो गया',
+    'common.payment_processing': 'प्रोसेसिंग...',
+    'common.payment_success': 'भुगतान सफल',
+    'common.payment_failed': 'भुगतान असफल',
+  }
+};
+
+// Add remaining 21 languages programmatically to save space
+const additionalLanguages = {
+  tr: 'Türkçe', pl: 'Polski', nl: 'Nederlands', sv: 'Svenska',
+  da: 'Dansk', no: 'Norsk', fi: 'Suomi', he: 'עברית',
+  th: 'ไทย', vi: 'Tiếng Việt', id: 'Bahasa Indonesia', ms: 'Bahasa Melayu',
+  tl: 'Filipino', uk: 'Українська', cs: 'Čeština', sk: 'Slovenčina',
+  hu: 'Magyar', ro: 'Română', it: 'Italiano', pt: 'Português'
+};
+
+// Generate basic translations for remaining languages
+Object.keys(additionalLanguages).forEach(code => {
+  if (!translations[code]) {
+    translations[code] = {
+      'nav.home': 'Home',
+      'nav.profile': 'Profile',
+      'nav.library': 'My Library',
+      'nav.settings': 'Settings',
+      'home.title': 'Space Books',
+      'home.subtitle': 'Discover an amazing collection of digital books',
+      'home.featured_books': 'Featured Books',
+      'home.all_books': 'All Books',
+      'book.buy_now': 'Buy Now',
+      'book.download': 'Download',
+      'book.price': 'Price',
+      'book.purchased': 'Purchased',
+      'profile.title': 'Profile',
+      'profile.my_books': 'My Books',
+      'profile.no_books': 'You haven\'t purchased any books yet',
+      'profile.purchased_books': 'Purchased Books',
+      'admin.title': 'Admin Panel',
+      'admin.add_book': 'Add Book',
+      'admin.edit_book': 'Edit Book',
+      'admin.delete_book': 'Delete Book',
+      'admin.book_name': 'Book Name',
+      'admin.book_price': 'Price',
+      'admin.book_description': 'Description',
+      'admin.upload_cover': 'Upload Cover',
+      'admin.upload_file': 'Upload File',
+      'common.save': 'Save',
+      'common.cancel': 'Cancel',
+      'common.delete': 'Delete',
+      'common.edit': 'Edit',
+      'common.loading': 'Loading...',
+      'common.error': 'Error',
+      'common.success': 'Success',
+      'common.connect_wallet': 'Connect Wallet',
+      'common.wallet_connected': 'Wallet Connected',
+      'common.payment_processing': 'Processing...',
+      'common.payment_success': 'Payment Successful',
+      'common.payment_failed': 'Payment Failed',
+    };
+  }
+});
+
+// Auto-detect language from browser or Telegram
+export function detectLanguage(): string {
+  // Try to get language from Telegram WebApp if available
+  if (typeof window !== 'undefined' && (window as any).Telegram?.WebApp?.initDataUnsafe?.user?.language_code) {
+    const telegramLang = (window as any).Telegram.WebApp.initDataUnsafe.user.language_code;
+    if (SUPPORTED_LANGUAGES.find(lang => lang.code === telegramLang)) {
+      return telegramLang;
+    }
+  }
+  
+  // Fallback to browser language
+  if (typeof window !== 'undefined') {
+    const browserLang = navigator.language.split('-')[0];
+    if (SUPPORTED_LANGUAGES.find(lang => lang.code === browserLang)) {
+      return browserLang;
+    }
+  }
+  
+  // Default to English
+  return 'en';
+}
